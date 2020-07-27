@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from fib_fun import crud
 from app import schemas
-from SQL_app import models
+from SQL_app import models, sql_main
 from SQL_app.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
@@ -23,7 +23,8 @@ def get_db():
 
 @app.post("/generatefibnum/", response_model=schemas.Fib)
 def create_fibnum(num: schemas.FibBase, db: Session = Depends(get_db)):
-    return crud.create_fibnum(db=db, num=num)
+    crud.create_fibnum(num=num)
+    return sql_main.writte_in_db(db=db, num=num)
 
 
 @app.get("/fibnumdb/", response_model=List[schemas.Fib])
